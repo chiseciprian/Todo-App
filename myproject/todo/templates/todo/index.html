@@ -1,0 +1,137 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ToDo App</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/css/mdb.min.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'todo/bs/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'todo/styles.css' %}"/>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
+
+
+</head>
+<body>
+
+<div class="container-fluid" id="wrapper">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-4 " id="content">
+
+            <h2>{{ time | date:"d F, Y" }}</h2>
+            <hr>
+            <ul class="list-group t20 text-center ">
+                {% for todo in todo_list %}
+                {% if todo.complete %}
+                <li class="list-group-item todo-completed ">{{ todo.text }}</li>
+                {% else %}
+                <a href="{% url 'complete' todo.id %}">
+                    <li class="list-group-item">{{ todo.text }} <br>
+                        <div class="id-view">{{todo.date | date:"d M, Y H:i"}}</div>
+                    </li>
+
+                </a>
+                {% endif %}
+                {% empty %}
+                <p class="relax">Enjoy your free time...</p>
+                {% endfor %}
+            </ul>
+            <div class="btn-group">
+                <a
+                        href="{% url 'deletecomplete' %}">
+                    <button type="button" class="btn  btn-circle btn-llg">
+                        <i class="fa fa-check"></i>
+                    </button>
+                </a>
+            </div>
+            <button type="button" class="btn  btn-circle btn-xl" data-toggle="modal"
+                    data-target="#exampleModal">+
+            </button>
+            <div class="btn-group">
+                <a
+                        href="{% url 'deleteall' %}">
+                    <button type="button" class="btn  btn-circle btn-llg"><i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade " id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog justify-content-center" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title  " style="color:#7033ff" id="exampleModalLabel">Add some
+                    task</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'add' %}" method="POST" role="form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        What you want to do?
+                        <div class="input-group">
+                            {{ form.text }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        When you want to end?
+                        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                            {{ form.date }}
+                            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="submit" class="btn    btn-circle btn-xl" id="add-btn">+</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+<script src="{% static 'todo/bs/js/jquery-3.4.1.min.js' %}"></script>
+<script src="{% static 'todo/bs/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'todo/bs/js/moment.js' %}"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+<script>
+  $(function () {
+    $("#datetimepicker1").datetimepicker({
+      format: 'DD/MM/YYYY HH:mm',
+    });
+  });
+
+
+
+
+
+
+
+
+</script>
+{% endblock javascripts %}
+</body>
+</html>
